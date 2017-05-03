@@ -16,6 +16,10 @@ void DrawSmooth::onObjectAdd() {
 
     for (unsigned int i = 0, k = 0; i < object.faces().size(); ++i) {
         const Face& face = object.faces()[i];
+        if (face.numVertices() != 3) {
+            cout << "Object has one (or more) face that is not a triangle" << endl;
+            return;
+        }
         for (int j = 0; j < face.numVertices(); ++k, ++j) {
             int index = face.vertexIndex(j);
             indices[k] = index;
