@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'draw-vbo-ext.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.6.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.9.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -13,12 +13,14 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'draw-vbo-ext.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.6.1. It"
+#error "This file was generated using the moc from 5.9.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_DrawSmooth_t {
     QByteArrayData data[1];
     char stringdata0[11];
@@ -63,7 +65,7 @@ void DrawSmooth::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
 
 const QMetaObject DrawSmooth::staticMetaObject = {
     { &QObject::staticMetaObject, qt_meta_stringdata_DrawSmooth.data,
-      qt_meta_data_DrawSmooth,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+      qt_meta_data_DrawSmooth,  qt_static_metacall, nullptr, nullptr}
 };
 
 
@@ -74,7 +76,7 @@ const QMetaObject *DrawSmooth::metaObject() const
 
 void *DrawSmooth::qt_metacast(const char *_clname)
 {
-    if (!_clname) return Q_NULLPTR;
+    if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_meta_stringdata_DrawSmooth.stringdata0))
         return static_cast<void*>(const_cast< DrawSmooth*>(this));
     if (!strcmp(_clname, "BasicPlugin"))
@@ -87,8 +89,6 @@ void *DrawSmooth::qt_metacast(const char *_clname)
 int DrawSmooth::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QObject::qt_metacall(_c, _id, _a);
-    if (_id < 0)
-        return _id;
     return _id;
 }
 
@@ -108,7 +108,7 @@ static const unsigned char qt_pluginMetaData[] = {
     0x1b, 0x07, 0x00, 0x00, 0x09, 0x00, 'c',  'l', 
     'a',  's',  's',  'N',  'a',  'm',  'e',  0x00,
     0x0a, 0x00, 'D',  'r',  'a',  'w',  'S',  'm', 
-    'o',  'o',  't',  'h',  ':',  0xc0, 0xa0, 0x00,
+    'o',  'o',  't',  'h',  0x1a, ' ',  0xa1, 0x00,
     0x07, 0x00, 'v',  'e',  'r',  's',  'i',  'o', 
     'n',  0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00,
     0x05, 0x00, 'd',  'e',  'b',  'u',  'g',  0x00,
@@ -139,7 +139,7 @@ static const unsigned char qt_pluginMetaData[] = {
     'a',  'm',  'e',  0x00, 0x0a, 0x00, 'D',  'r', 
     'a',  'w',  'S',  'm',  'o',  'o',  't',  'h', 
     '1',  0x00, 0x00, 0x00, 0x05, 0x00, 'd',  'e', 
-    'b',  'u',  'g',  0x00, ':',  0xc0, 0xa0, 0x00,
+    'b',  'u',  'g',  0x00, 0x1a, ' ',  0xa1, 0x00,
     0x07, 0x00, 'v',  'e',  'r',  's',  'i',  'o', 
     'n',  0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
     '(',  0x00, 0x00, 0x00, 'D',  0x00, 0x00, 0x00,
@@ -149,4 +149,5 @@ static const unsigned char qt_pluginMetaData[] = {
 
 QT_MOC_EXPORT_PLUGIN(DrawSmooth, DrawSmooth)
 
+QT_WARNING_POP
 QT_END_MOC_NAMESPACE

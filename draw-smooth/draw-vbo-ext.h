@@ -20,10 +20,18 @@ class DrawSmooth : public QObject, public BasicPlugin {
     void onSceneClear();
     bool drawObject(int i);
     bool drawScene();
+    ~DrawSmooth();
    
  private:
-     vector<GLuint> VAOs;
-     vector<unsigned int> numIndices;
+
+    void cleanUp();
+
+    vector<GLuint> VAOs;
+    vector<unsigned int> numIndices;
+    vector<GLuint> vertexBuffer;
+    vector<GLuint> normalBuffer;
+    vector<GLuint> colorBuffer;
+    vector<GLuint> indexBuffer;
  };
  
  #endif
