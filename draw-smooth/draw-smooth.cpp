@@ -1,4 +1,4 @@
-#include "draw-vbo-ext.h"
+#include "draw-smooth.h"
 #include "glwidget.h"
 
 void DrawSmooth::onPluginLoad() {
