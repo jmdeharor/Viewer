@@ -5,6 +5,10 @@ const int IMAGE_WIDTH = 1024;
 const int IMAGE_HEIGHT = IMAGE_WIDTH;
 
 void Reflection::onPluginLoad() {
+    trianglePlane = vector<Point>(3);
+    trianglePlane[0] = Point(-2.5,-2,-1);
+    trianglePlane[1] = Point(-2.5,-2,5);
+    trianglePlane[2] = Point(-2.5,4,-1);
     GLWidget & g = *glwidget();
     g.makeCurrent();
     // Carregar shader, compile & link 
@@ -50,7 +54,7 @@ void Reflection::onPluginLoad() {
     g.resize(IMAGE_WIDTH,IMAGE_HEIGHT);
 }
 
-void drawRect(GLWidget &g) {
+void drawRect(GLWidget &g, vector<Point>& plane) {
     static bool created = false;
     static GLuint VAO_rect;
 
@@ -58,6 +62,13 @@ void drawRect(GLWidget &g) {
     if (not created) {
         created = true;
         
+        // Create VBO with (x,y,z) coordinates
+        Point point = plane[0] + (plane[1]-plane[0] + plane[2]-plane[0]);
+        float coords[] = { plane[0][0], plane[0][1], plane[0][2],
+                           plane[1][0], plane[1][1], plane[1][2],
+                           plane[2][0], plane[2][1], plane[2][2],
+                           point[0], point[1], point[2]};
+
 
         // Create & bind empty VAO
         g.glGenVertexArrays(1, &VAO_rect);
@@ -83,14 +94,41 @@ bool Reflection::paintGL() {
     // Pass 1. Draw scene
     g.glClearColor(1,1,1,0);
     g.glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    QVector3D plane(0,1,0);
-    int a = plane[0];
-    int b = plane[1];
-    int c = plane[2];
+    QVector3D vec1 = trianglePlane[1]-trianglePlane[0];
+    QVector3D vec2 = trianglePlane[2]-trianglePlane[0];
+    QVector3D crossProd = QVector3D::crossProduct(vec1, vec2).normalized();
+    float a = crossProd.x();
+    float b = crossProd.y();
+    float c = crossProd.z();
+    float d = a*trianglePlane[0][0] + b*trianglePlane[0][1] + c*trianglePlane[0][2];
+    cout << "Plane: ";
+    if (a != 0) {
+        if (a != 1) cout << a;
+        cout << "x ";
+    }
+    if (b != 0) {
+        if (a != 0) cout << "+ ";
+        if (b != 1) cout << b;
+        cout << "y ";
+    }
+    if (c != 0) {
+        if (a != 0 or b != 0) cout << "+ ";
+        if (c != 1) cout << c;
+        cout << "z ";
+    }
+    if (d != 0) {
+        if (a != 0 or b != 0 or c != 0) {
+            if (d < 0) cout << d;
+            else cout << "+ " << d;
+        }
+        else cout << d;
+        cout << " ";
+    }
+    cout << "= 0" << endl;
     QMatrix4x4 reflection(
-                1-2*a*a, -2*a*b, -2*a*c, 0,
-                -2*a*b,1-2*b*b, -2*b*c, 0,
-                -2*a*c, -2*b*c, 1-2*c*c, 0,
+                1-2*a*a, -2*a*b, -2*a*c, -2*d*a,
+                -2*a*b,1-2*b*b, -2*b*c, -2*d*b,
+                -2*a*c, -2*b*c, 1-2*c*c, -2*d*c,
                 0, 0, 0, 1
                 );
     mainProgram->bind();
@@ -112,14 +150,13 @@ bool Reflection::paintGL() {
 
     QMatrix4x4 transform;
 
-    //transform.translate(0,-5,0);
-    transform.rotate(90, 1,0,0);
-    transform.scale(5);
+    //transform.translate(-3, 0, -3);
+    //transform.scale(6);
 
 // quad covering viewport 
     program->setUniformValue("modelViewProjectionMatrix",  camera()->projectionMatrix()*camera()->viewMatrix()*transform);
 
-    drawRect(g);
+    drawRect(g, trianglePlane);
     program->release();
     g.glBindTexture(GL_TEXTURE_2D, 0);
 

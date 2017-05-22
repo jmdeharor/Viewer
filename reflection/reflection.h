@@ -17,12 +17,7 @@ class Reflection : public QObject, public BasicPlugin
     bool paintGL();
  
  private:
-    // Create VBO with (x,y,z) coordinates
-    float coords[] = { -1, -1, 0,
-                        1, -1, 0,
-                       -1,  1, 0,
-                        1,  1, 0};
-
+    vector<Point> trianglePlane;
     QOpenGLShaderProgram* program;
     QOpenGLShaderProgram* mainProgram;
     QOpenGLShader* vs;

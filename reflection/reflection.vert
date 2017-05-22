@@ -1,10 +1,8 @@
 #version 330 core
 uniform mat4 modelViewProjectionMatrix;
 
-in vec3 vertex;
-out vec2 texCoord;
+layout (location = 0) in vec3 vertex;
 
 void main() {
-	texCoord = (vertex.xy+vec2(1))/2;
 	gl_Position    = modelViewProjectionMatrix * vec4(vertex,1.0);
 }
