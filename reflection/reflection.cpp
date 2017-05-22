@@ -6,9 +6,9 @@ const int IMAGE_HEIGHT = IMAGE_WIDTH;
 
 void Reflection::onPluginLoad() {
     trianglePlane = vector<Point>(3);
-    trianglePlane[0] = Point(-2.5,-2,-1);
-    trianglePlane[1] = Point(-2.5,-2,5);
-    trianglePlane[2] = Point(-2.5,4,-1);
+    trianglePlane[0] = Point(-3,-2,-1);
+    trianglePlane[1] = Point(-2.5,0,5);
+    trianglePlane[2] = Point(-2.5,4,-5);
     GLWidget & g = *glwidget();
     g.makeCurrent();
     // Carregar shader, compile & link 
@@ -90,6 +90,11 @@ void drawRect(GLWidget &g, vector<Point>& plane) {
 }
 
 bool Reflection::paintGL() {
+    /*Object& object = scene()->objects()[0];
+    Point size = object.boundingBox().max()-object.boundingBox().min();
+    trianglePlane[0] = object.boundingBox().min();
+    trianglePlane[1] = Point(object.boundingBox().min().x() + size.x(), object.boundingBox().min().y(), object.boundingBox().min().z());
+    trianglePlane[2] = Point(object.boundingBox().min().x(), object.boundingBox().min().y() + size.y(), object.boundingBox().min().z());*/
     GLWidget & g = *glwidget();
     // Pass 1. Draw scene
     g.glClearColor(1,1,1,0);
@@ -100,7 +105,7 @@ bool Reflection::paintGL() {
     float a = crossProd.x();
     float b = crossProd.y();
     float c = crossProd.z();
-    float d = a*trianglePlane[0][0] + b*trianglePlane[0][1] + c*trianglePlane[0][2];
+    float d = a*trianglePlane[1][0] + b*trianglePlane[1][1] + c*trianglePlane[1][2];
     cout << "Plane: ";
     if (a != 0) {
         if (a != 1) cout << a;
@@ -126,11 +131,18 @@ bool Reflection::paintGL() {
     }
     cout << "= 0" << endl;
     QMatrix4x4 reflection(
-                1-2*a*a, -2*a*b, -2*a*c, -2*d*a,
-                -2*a*b,1-2*b*b, -2*b*c, -2*d*b,
-                -2*a*c, -2*b*c, 1-2*c*c, -2*d*c,
+                1-2*a*a, -2*a*b, -2*a*c, 2*d*a,
+                -2*a*b,1-2*b*b, -2*b*c, 2*d*b,
+                -2*a*c, -2*b*c, 1-2*c*c, 2*d*c,
                 0, 0, 0, 1
                 );
+    for (int i = 0; i < 4; ++i) {
+        QVector4D row = reflection.row(i);
+        for (int j = 0; j < 4; ++j) {
+            cout << row[j] << " ";
+        }
+        cout << endl;
+    }
     mainProgram->bind();
     mainProgram->setUniformValue("modelViewProjectionMatrix", camera()->projectionMatrix()*camera()->viewMatrix()*reflection);
     mainProgram->setUniformValue("normalMatrix", camera()->viewMatrix().normalMatrix());
