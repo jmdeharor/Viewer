@@ -105,7 +105,7 @@ bool Reflection::paintGL() {
     float a = crossProd.x();
     float b = crossProd.y();
     float c = crossProd.z();
-    float d = a*trianglePlane[1][0] + b*trianglePlane[1][1] + c*trianglePlane[1][2];
+    float d = -(a*trianglePlane[1][0] + b*trianglePlane[1][1] + c*trianglePlane[1][2]);
     cout << "Plane: ";
     if (a != 0) {
         if (a != 1) cout << a;
@@ -131,9 +131,9 @@ bool Reflection::paintGL() {
     }
     cout << "= 0" << endl;
     QMatrix4x4 reflection(
-                1-2*a*a, -2*a*b, -2*a*c, 2*d*a,
-                -2*a*b,1-2*b*b, -2*b*c, 2*d*b,
-                -2*a*c, -2*b*c, 1-2*c*c, 2*d*c,
+                1-2*a*a, -2*a*b, -2*a*c, -2*d*a,
+                -2*a*b,1-2*b*b, -2*b*c, -2*d*b,
+                -2*a*c, -2*b*c, 1-2*c*c, -2*d*c,
                 0, 0, 0, 1
                 );
     for (int i = 0; i < 4; ++i) {
