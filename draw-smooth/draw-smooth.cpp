@@ -12,7 +12,9 @@ void DrawSmooth::onObjectAdd() {
     vector<float> vertices(3*object.vertices().size());
     vector<float> normals(3*object.vertices().size());
     vector<float> colors(3*object.vertices().size());
-    vector<list<GLuint>> VF(object.vertices().size());
+    //vector<list<GLuint>> VF(object.vertices().size());
+    vector<Vector> avgNormals(object.vertices().size());
+    vector<unsigned int> numIncidence(object.vertices().size());
 
     for (unsigned int i = 0, k = 0; i < object.faces().size(); ++i) {
         const Face& face = object.faces()[i];
@@ -20,13 +22,16 @@ void DrawSmooth::onObjectAdd() {
             cout << "Object has one (or more) face that is not a triangle" << endl;
             return;
         }
+        Vector normal = face.normal();
         for (int j = 0; j < face.numVertices(); ++k, ++j) {
             int index = face.vertexIndex(j);
             indices[k] = index;
-            VF[index].push_back(i);
+            //VF[index].push_back(i);
+            avgNormals[index] += normal;
+            ++numIncidence[index];
         }
     }
-    int i = 0;
+    unsigned int i = 0;
     for (Vertex& vertex : object.vertices()) {
         Point p = vertex.coord();
         vertices[i] = p.x();
@@ -34,7 +39,19 @@ void DrawSmooth::onObjectAdd() {
         vertices[i+2] = p.z();
         i += 3;
     }
-    for (unsigned int v = 0; v < VF.size(); ++v) {
+    for (i = 0; i < object.vertices().size(); ++i) {
+        Vector average = avgNormals[i]/numIncidence[i];
+        Vector normal = average.normalized();
+
+        normals[3*i] = average.x();
+        normals[3*i+1] = average.y();
+        normals[3*i+2] = average.z();
+
+        colors[3*i] = abs(normal.x());
+        colors[3*i+1] = abs(normal.y());
+        colors[3*i+2] = abs(normal.z());
+    }
+    /*for (unsigned int v = 0; v < VF.size(); ++v) {
         list<GLuint>& faces = VF[v];
         QVector3D average;
         for (GLuint faceIndex : faces) {
@@ -50,7 +67,7 @@ void DrawSmooth::onObjectAdd() {
         colors[3*v] = abs(normal.x());
         colors[3*v+1] = abs(normal.y());
         colors[3*v+2] = abs(normal.z());
-    }
+    }*/
     GLuint VAO, vertexVBO, normalVBO, indexBufferID, colorVBO;
 
     GLWidget &g = *glwidget();
